@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SocialNetwork</string>
+    <string name="todo">TODO</string>
+    <string name="name">Name</string>
+    <string name="textview">TextView</string>
+    <string name="post">Post</string>
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>

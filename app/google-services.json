@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "890410105473",
+    "project_id": "socialnetwork-87616",
+    "storage_bucket": "socialnetwork-87616.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890410105473:android:d4367ffcc5886a6d84eb80",
+        "android_client_info": {
+          "package_name": "com.codiyapa.socialnetwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890410105473-b3r62sesi423pdv4de5lsulmah45gjt8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwt2gv7uCn0-hEB_l6AmHhpZ-kdQ-RZeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890410105473-b3r62sesi423pdv4de5lsulmah45gjt8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
