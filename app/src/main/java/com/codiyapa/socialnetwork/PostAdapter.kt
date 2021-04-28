@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +22,11 @@ import kotlinx.android.synthetic.main.post_item.view.*
 class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: FirebaseAuth, val listener: MainActivity2) : FirestoreRecyclerAdapter<Post, PostAdapter.PostViewHolder>(
         options
 ) {
+    companion object {
+        private const val DOUBLE_CLICK_TIME_DELTA: Long = 300 //milliseconds
+        private var click : Int = 0
+        private var lastClickTime: Long = 0
+    }
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val userImage: ImageView = view.userImage
         val userName: TextView = view.userName
@@ -28,6 +35,7 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: Fi
         val likeButton: ImageView = view.likeButton
         val likeCount: TextView = view.likeCount
         val postImage : ImageView = view.postImage
+        val cardView : CardView = view.cardView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -67,6 +75,30 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: Fi
                 PostDao().posts.document(postId).set(post)
             }
         }
-
+        holder.cardView.setOnClickListener {
+            val clickTime = System.currentTimeMillis()
+//            Toast.makeText(listener , clickTime.toString(), Toast.LENGTH_LONG).show()
+            if(clickTime - lastClickTime < DOUBLE_CLICK_TIME_DELTA) {
+//                Toast.makeText(listener , "Aditya", Toast.LENGTH_LONG).show()
+                val user = mAuth.currentUser
+                val userId = user.uid
+                val isLiked = model.likedBy.contains(userId)
+                if (isLiked) {
+                    model.likedBy.remove(userId)
+                    holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.unlike))
+                    val postId = snapshots.getSnapshot(position).id
+                    val post = Post(model.text, model.createdBy, model.time, model.imageUrl,model.likedBy)
+                    PostDao().posts.document(postId).set(post)
+                } else {
+                    model.likedBy.add(userId)
+                    holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.liked))
+                    val postId = snapshots.getSnapshot(position).id
+                    val post = Post(model.text, model.createdBy, model.time,  model.imageUrl,model.likedBy)
+                    PostDao().posts.document(postId).set(post)
+                }
+            }
+            lastClickTime = clickTime
+//            Toast.makeText(listener , lastClickTime.toString(), Toast.LENGTH_LONG).show()
+        }
     }
 }
