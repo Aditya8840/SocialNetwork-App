@@ -1,9 +1,11 @@
 package com.codiyapa.socialnetwork
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -25,11 +27,11 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: Fi
         val postText: TextView = view.postTitle
         val likeButton: ImageView = view.likeButton
         val likeCount: TextView = view.likeCount
+        val postImage : ImageView = view.postImage
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false))
-        return view
+        return PostViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int, model: Post) {
@@ -38,6 +40,10 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: Fi
         Glide.with(holder.userImage.context).load(model.createdBy.imageUrl).circleCrop().into(holder.userImage)
         holder.likeCount.text = model.likedBy.size.toString()
         holder.createdAt.text = Utils.getTimeAgo(model.time)
+        if(model.imageUrl != "hii"){
+            Glide.with(holder.postImage.context).load(model.imageUrl).into(holder.postImage)
+//            Log.d("image", model.imageUrl)
+        }
         val user = mAuth.currentUser
         val userId = user.uid
         val isLiked = model.likedBy.contains(userId)
@@ -51,13 +57,13 @@ class PostAdapter(options: FirestoreRecyclerOptions<Post>, private var mAuth: Fi
                 model.likedBy.remove(userId)
                 holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.unlike))
                 val postId = snapshots.getSnapshot(position).id
-                val post = Post(model.text, model.createdBy, model.time, model.likedBy)
+                val post = Post(model.text, model.createdBy, model.time, model.imageUrl,model.likedBy)
                 PostDao().posts.document(postId).set(post)
             } else {
                 model.likedBy.add(userId)
                 holder.likeButton.setImageDrawable(ContextCompat.getDrawable(holder.likeButton.context, R.drawable.liked))
                 val postId = snapshots.getSnapshot(position).id
-                val post = Post(model.text, model.createdBy, model.time, model.likedBy)
+                val post = Post(model.text, model.createdBy, model.time,  model.imageUrl,model.likedBy)
                 PostDao().posts.document(postId).set(post)
             }
         }

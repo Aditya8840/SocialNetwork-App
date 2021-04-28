@@ -37,7 +37,6 @@ class MainActivity2 : AppCompatActivity() {
         adapter = PostAdapter(recyclerViewOption, mAuth, this)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-
     }
 
     override fun onStart() {
@@ -48,5 +47,4 @@ class MainActivity2 : AppCompatActivity() {
         super.onStop()
         adapter.stopListening()
     }
-
 }
